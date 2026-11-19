@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Lunar Habitat 3D Models</title>
+<meta name="description" content="Interactive glTF 3D models of the NASA HUNCH Lunar Smart Adaptive Habitat: the full site, the color habitat, and the 1:50 3D-print parts.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+:root{--bg:#0b0420;--panel:#140a33;--line:#2a1a5e;--ink:#ece8ff;--mute:#a99fd6;--gold:#ffd76a;--pink:#ff7ad9;--cyan:#5ee7ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#2a1366 0,transparent 60%),var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif}
+a{color:var(--cyan)}.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header{padding:56px 0 24px}.studio{font:600 13px Inter;letter-spacing:.2em;color:var(--mute);text-transform:uppercase}
+h1{font:700 clamp(34px,6vw,60px)/1.05 "Space Grotesk",sans-serif;margin:10px 0 12px;background:linear-gradient(90deg,var(--gold),var(--pink),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tag{font-size:18px;color:var(--mute);max-width:760px;margin:0}
+.btn{display:inline-flex;gap:8px;align-items:center;padding:10px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);text-decoration:none;font-weight:600;font-size:15px;cursor:pointer;font-family:inherit}
+.btn.on{background:linear-gradient(90deg,#6a4dff,#c04dff);border-color:transparent}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 14px}
+.viewer{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;height:min(68vh,600px)}
+model-viewer{width:100%;height:100%;--poster-color:transparent;background:radial-gradient(800px 400px at 50% 0,#1d1050,#07021a)}
+.bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:transparent}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--cyan));transition:width .2s}
+.ctl{position:absolute;right:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ctl .btn{padding:8px 12px;font-size:13px;background:rgba(20,10,51,.8)}
+.help{position:absolute;left:12px;bottom:12px;font-size:12px;color:var(--mute);background:rgba(11,4,32,.7);padding:6px 10px;border-radius:8px}
+.info{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin:16px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+.card h2{font:700 22px "Space Grotesk";margin:0 0 8px}.card p{margin:0 0 10px;color:var(--mute)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-size:14px}dt{color:var(--mute)}dd{margin:0;font-variant-numeric:tabular-nums}
+footer{padding:36px 0;color:var(--mute);font-size:14px;text-align:center}
+@media (max-width:720px){.info{grid-template-columns:1fr}header{padding:36px 0 12px}.help{display:none}}
+</style></head><body>
+<div class="wrap">
+<header><div class="studio">JaiGod Studio · NASA HUNCH</div><h1>Lunar Habitat in 3D</h1>
+<p class="tag">Interactive glTF models of the Lunar Smart Adaptive Habitat. Drag to orbit, scroll or pinch to zoom. On a phone, tap <b>AR</b> to place the habitat in your room.</p></header>
+
+<div class="tabs" id="tabs"></div>
+<div class="viewer">
+  <model-viewer id="mv" camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="1500" rotation-per-second="12deg"
+    shadow-intensity="1" exposure="1.1" environment-image="neutral" interaction-prompt="auto" ar ar-modes="webxr scene-viewer quick-look"
+    alt="3D model of the Lunar Smart Adaptive Habitat"></model-viewer>
+  <div class="ctl"><button class="btn" id="rot">⏸ Rotate</button><button class="btn" id="reset">⟲ Reset view</button><a class="btn" id="dl" download>⬇ .glb</a></div>
+  <div class="help">Drag: orbit · Scroll: zoom · Right-drag: pan</div>
+  <div class="bar"><i id="pb"></i></div>
+</div>
+
+<div class="info">
+  <div class="card"><h2 id="t"></h2><p id="d"></p></div>
+  <div class="card"><dl id="stats"></dl></div>
+</div>
+
+<footer>© Jaineil R. · <a href="https://jaigod.github.io/LunarSmartAdaptiveHabitat/">Main project site</a> · <a href="https://github.com/JaiGod">JaiGod</a></footer>
+</div>
+<script>
+const MODELS=[
+ {id:'site',label:'🌕 Full habitat site',file:'models/habitat.glb',size:'920 KB',tris:'181,236',mats:34,
+  orbit:'35deg 66deg 62m',target:'0m 4m 0m',
+  title:'Full habitat site',
+  desc:'The complete Blender scene: the two-deck habitat with its 3D-printed regolith shell, sintered foundation pad, landing pad with beacons, path lights, and the lunar terrain (340 m across) with Earth on the horizon. Zoom out to see the whole site.'},
+ {id:'color',label:'🏠 Habitat (color)',file:'models/habitat_base_color.glb',size:'400 KB',tris:'39,500',mats:29,
+  orbit:'auto auto auto',target:'auto auto auto',
+  title:'Habitat, color model',
+  desc:'The habitat on its own, without the surrounding terrain, with color materials for each system. This is the model used for the color 1:50 print.'},
+ {id:'parts',label:'🖨️ 1:50 print parts',file:'models/print_parts_1to50.glb',size:'252 KB',tris:'38,520',mats:6,
+  orbit:'auto auto auto',target:'auto auto auto',
+  title:'1:50 3D-print parts',
+  desc:'The six printable STL parts in one model, each in its own color: lower deck, upper deck, roof, regolith shield, crew EVA airlock and equipment airlock. The STL files are on the main project page.'}];
+const mv=document.getElementById('mv'),tabs=document.getElementById('tabs'),pb=document.getElementById('pb');
+let cur;
+function show(m){
+  cur=m;
+  tabs.querySelectorAll('.btn').forEach(b=>b.classList.toggle('on',b.dataset.id===m.id));
+  mv.src=m.file;mv.cameraOrbit=m.orbit;mv.cameraTarget=m.target;mv.minCameraOrbit='auto auto '+(m.id==='site'?'6m':'auto');mv.maxCameraOrbit='auto auto '+(m.id==='site'?'400m':'auto');
+  document.getElementById('dl').href=m.file;
+  document.getElementById('t').textContent=m.title;document.getElementById('d').textContent=m.desc;
+  document.getElementById('stats').innerHTML=`<dt>Format</dt><dd>glTF 2.0 binary (.glb)</dd><dt>File size</dt><dd>${m.size}</dd><dt>Triangles</dt><dd>${m.tris}</dd><dt>Materials</dt><dd>${m.mats}</dd><dt>Compression</dt><dd>Draco</dd><dt>Validation</dt><dd>0 errors, 0 warnings</dd>`;
+  try{history.replaceState(null,'','#'+m.id)}catch(e){}
+}
+MODELS.forEach(m=>{const b=document.createElement('button');b.className='btn';b.dataset.id=m.id;b.textContent=m.label;b.onclick=()=>show(m);tabs.appendChild(b)});
+mv.addEventListener('progress',e=>{const p=e.detail.totalProgress*100;pb.style.width=p+'%';if(p>=100)setTimeout(()=>pb.style.width='0',400)});
+document.getElementById('rot').onclick=e=>{mv.autoRotate=!mv.autoRotate;e.target.textContent=mv.autoRotate?'⏸ Rotate':'▶ Rotate'};
+document.getElementById('reset').onclick=()=>{const m=cur;mv.cameraOrbit=m.orbit;mv.cameraTarget=m.target;mv.jumpCameraToGoal()};
+show(MODELS.find(m=>'#'+m.id===location.hash)||MODELS[0]);
+</script>
+</body></html>
